@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,12 +36,14 @@ public class CrimeListFragment extends Fragment {
         mAdapter = new CrimeAdapter(crimes);
         mCrimeRecyclerView.setAdapter(mAdapter);
     }
+
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleView;
         private TextView mDateTextView;
         private Crime mCrime;
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent){
-            super(inflater.inflate(R.layout.list_item_crime, parent, false));
+        private Button mPoliceButton;
+        public CrimeHolder(View inflater, ViewGroup parent) {
+            super(inflater);
             itemView.setOnClickListener(this);
             mTitleView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
@@ -63,10 +66,20 @@ public class CrimeListFragment extends Fragment {
                 mCrimes = crimes;
             }
 
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-                LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View layoutInflater;
+                if(getItemViewType(position) % 2 == 0) {
+                    layoutInflater = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crimes_police, parent, false);
+                }else{
+                    layoutInflater = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crime, parent, false);
+                }
             return new CrimeHolder(layoutInflater, parent);
         }
 
