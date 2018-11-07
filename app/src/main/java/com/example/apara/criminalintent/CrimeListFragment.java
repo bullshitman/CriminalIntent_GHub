@@ -42,8 +42,8 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private Crime mCrime;
         private Button mPoliceButton;
-        public CrimeHolder(View inflater, ViewGroup parent) {
-            super(inflater);
+        public CrimeHolder(LayoutInflater inflater, ViewGroup parent, int layout) {
+            super(inflater.inflate(layout, parent, false));
             itemView.setOnClickListener(this);
             mTitleView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
@@ -60,27 +60,28 @@ public class CrimeListFragment extends Fragment {
         }
     }
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
-            private List<Crime> mCrimes;
+        private List<Crime> mCrimes;
+        private int mUsualLayout = R.layout.list_item_crime;
+        private int mPoliceLayout = R.layout.list_item_crimes_police;
 
-            public CrimeAdapter(List<Crime> crimes){
-                mCrimes = crimes;
-            }
+        public CrimeAdapter(List<Crime> crimes){
+            mCrimes = crimes;
+        }
 
         @Override
         public int getItemViewType(int position) {
-            return super.getItemViewType(position);
+                if (mCrimes.get(position).isRequiresPolice()){
+                    return mPoliceLayout;
+                }else {
+                    return mUsualLayout;
+                }
         }
 
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-            View layoutInflater;
-                if(getItemViewType(position) % 2 == 0) {
-                    layoutInflater = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crimes_police, parent, false);
-                }else{
-                    layoutInflater = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_crime, parent, false);
-                }
-            return new CrimeHolder(layoutInflater, parent);
+            LayoutInflater  layoutInflater = LayoutInflater.from(getActivity());
+            return new CrimeHolder(layoutInflater, parent, getItemViewType(position));
         }
 
         @Override
