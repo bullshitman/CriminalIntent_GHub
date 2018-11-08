@@ -1,11 +1,20 @@
 package com.example.apara.criminalintent;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
-public class CrimeActivity extends SingleFragmentActivity {
+import java.util.UUID;
 
+public class CrimeActivity extends SingleFragmentActivity {
+    public static final String EXTRA_CRIME_ID = "*.crime_id";
     @Override
     protected Fragment createFragment() {
         return new CrimeFragment();
+    }
+    public static Intent newIntent(Context packegeContext, UUID crimeId) {
+        Intent intent = new Intent(packegeContext, CrimeActivity.class);
+        intent.putExtra(EXTRA_CRIME_ID, crimeId);
+        return intent;
     }
 }
