@@ -10,9 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
@@ -42,16 +48,21 @@ public class CrimeListFragment extends Fragment {
         private TextView mDateTextView;
         private Crime mCrime;
         private Button mPoliceButton;
+        private ImageView mSolvedImageView;
+
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent, int layout) {
             super(inflater.inflate(layout, parent, false));
             itemView.setOnClickListener(this);
             mTitleView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
+            mSolvedImageView = itemView.findViewById(R.id.crime_solved);
         }
         public void bind(Crime crime){
             mCrime = crime;
             mTitleView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            SimpleDateFormat simpleCrimeDate = new SimpleDateFormat("EEEE, MMM d, yyyy");
+            mDateTextView.setText(simpleCrimeDate.format(mCrime.getDate()));
+            mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -70,11 +81,11 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
-                if (mCrimes.get(position).isRequiresPolice()){
-                    return mPoliceLayout;
-                }else {
-                    return mUsualLayout;
-                }
+//            if (mCrimes.get(position).isRequiresPolice()){
+//                return mPoliceLayout;
+//            }else {
+                return mUsualLayout;
+//            }
         }
 
         @NonNull

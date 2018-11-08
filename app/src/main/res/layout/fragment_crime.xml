@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp">
 
     <TextView
-        style="?android:listSeparatorTextViewStyle"
         android:id="@+id/textView"
+        style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_title_label"/>
+        android:text="@string/crime_title_label" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +25,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/crime_date" />
+        android:id="@+id/crime_date"/>
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
