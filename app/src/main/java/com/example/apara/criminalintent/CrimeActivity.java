@@ -10,7 +10,8 @@ public class CrimeActivity extends SingleFragmentActivity {
     public static final String EXTRA_CRIME_ID = "*.crime_id";
     @Override
     protected Fragment createFragment() {
-        return new CrimeFragment();
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        return CrimeFragment.newInstance(crimeId);
     }
     public static Intent newIntent(Context packegeContext, UUID crimeId) {
         Intent intent = new Intent(packegeContext, CrimeActivity.class);
