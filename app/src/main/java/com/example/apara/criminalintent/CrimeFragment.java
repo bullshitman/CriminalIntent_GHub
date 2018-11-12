@@ -31,6 +31,9 @@ public class CrimeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    public void returnResult(){
+        getActivity().setResult(Activity.RESULT_OK, null);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
