@@ -51,7 +51,7 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         }else {
-            mAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -87,7 +87,7 @@ public class CrimeListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CRIME) {
-
+            mAdapter.notifyItemChanged(REQUEST_CRIME);
         }
     }
 

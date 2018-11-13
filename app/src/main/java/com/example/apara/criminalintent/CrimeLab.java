@@ -33,7 +33,10 @@ public class CrimeLab {
     }
 
     public Crime getCrime(UUID id){
-        for (Crime crime : mCrimes){
+        int size = mCrimes.size();
+        Crime crime;
+        for (int i = 0; i < size; i++){
+            crime = mCrimes.get(i);
             if (crime.getId().equals(id)){
                 return crime;
             }

@@ -18,4 +18,5 @@ public class CrimeActivity extends SingleFragmentActivity {
         intent.putExtra(EXTRA_CRIME_ID, crimeId);
         return intent;
     }
+
 }
