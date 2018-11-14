@@ -26,6 +26,7 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private static final int REQUEST_CRIME = 1;
+    private int mCurrentProc;
 
     @Nullable
     @Override
@@ -51,7 +52,7 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         }else {
-
+            mAdapter.notifyItemChanged(mCurrentProc);
         }
     }
 
@@ -79,15 +80,17 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            mCurrentProc = getAdapterPosition();
             Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
             startActivityForResult(intent, REQUEST_CRIME);
+
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CRIME) {
-            mAdapter.notifyItemChanged(REQUEST_CRIME);
+//            mAdapter.notifyItemChanged(REQUEST_CRIME);
         }
     }
 
