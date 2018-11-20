@@ -42,12 +42,12 @@ public class CrimePagerActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                if (position != mCrimes.size()){
+                if (mViewPager.getCurrentItem() != mCrimes.size() - 1){
                     mLastButton.setVisibility(View.VISIBLE);
                 }else {
                     mLastButton.setVisibility(View.GONE);
                 }
-                if (position != 0){
+                if (mViewPager.getCurrentItem() != 0){
                     mFirstButton.setVisibility(View.VISIBLE);
                 }else {
                     mFirstButton.setVisibility(View.GONE);
@@ -72,7 +72,7 @@ public class CrimePagerActivity extends AppCompatActivity {
         mLastButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setCurrentItem(mCrimes.size());
+                mViewPager.setCurrentItem(mCrimes.size()-1);
                 mLastButton.setVisibility(View.GONE);
             }
         });
