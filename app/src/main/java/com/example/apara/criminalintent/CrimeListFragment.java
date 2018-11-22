@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class CrimeListFragment extends Fragment {
+    private static final int REQUEST_CRIME = 1;
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
-    private static final int REQUEST_CRIME = 1;
     private int mCurrentProc;
 
     @Nullable
@@ -46,8 +46,15 @@ public class CrimeListFragment extends Fragment {
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
-        }else {
+        } else {
             mAdapter.notifyItemChanged(mCurrentProc);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CRIME) {
+//            mAdapter.notifyItemChanged(REQUEST_CRIME);
         }
     }
 
@@ -65,7 +72,8 @@ public class CrimeListFragment extends Fragment {
             mDateTextView = itemView.findViewById(R.id.crime_date);
             mSolvedImageView = itemView.findViewById(R.id.crime_solved);
         }
-        public void bind(Crime crime){
+
+        public void bind(Crime crime) {
             mCrime = crime;
             mTitleView.setText(mCrime.getTitle());
             SimpleDateFormat simpleCrimeDate = new SimpleDateFormat("EEEE, MMM d, yyyy");
@@ -82,19 +90,12 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CRIME) {
-//            mAdapter.notifyItemChanged(REQUEST_CRIME);
-        }
-    }
-
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
         private List<Crime> mCrimes;
         private int mUsualLayout = R.layout.list_item_crime;
         private int mPoliceLayout = R.layout.list_item_crimes_police;
 
-        public CrimeAdapter(List<Crime> crimes){
+        public CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
@@ -103,14 +104,14 @@ public class CrimeListFragment extends Fragment {
 //            if (mCrimes.get(position).isRequiresPolice()){
 //                return mPoliceLayout;
 //            }else {
-                return mUsualLayout;
+            return mUsualLayout;
 //            }
         }
 
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-            LayoutInflater  layoutInflater = LayoutInflater.from(getActivity());
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             return new CrimeHolder(layoutInflater, parent, position);
         }
 

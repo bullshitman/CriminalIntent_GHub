@@ -18,11 +18,11 @@ import android.widget.EditText;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
+    private static final String ARG_CRIME_ID = "crime_id";
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
-    private static final String ARG_CRIME_ID = "crime_id";
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -31,7 +31,8 @@ public class CrimeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    public void returnResult(){
+
+    public void returnResult() {
         getActivity().setResult(Activity.RESULT_OK, null);
     }
 

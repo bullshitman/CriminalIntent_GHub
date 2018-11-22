@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class CrimePagerActivity extends AppCompatActivity {
+    public static final String EXTRA_CRIME_ID = "*.crime_id";
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
     private Button mLastButton;
     private Button mFirstButton;
-    public static final String EXTRA_CRIME_ID = "*.crime_id";
 
-    public static Intent newIntent(Context packageContext, UUID crimeId){
+    public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, crimeId);
         return intent;
@@ -42,14 +42,14 @@ public class CrimePagerActivity extends AppCompatActivity {
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                if (mViewPager.getCurrentItem() != mCrimes.size() - 1){
+                if (mViewPager.getCurrentItem() != mCrimes.size() - 1) {
                     mLastButton.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mLastButton.setVisibility(View.GONE);
                 }
-                if (mViewPager.getCurrentItem() != 0){
+                if (mViewPager.getCurrentItem() != 0) {
                     mFirstButton.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mFirstButton.setVisibility(View.GONE);
                 }
                 Crime crime = mCrimes.get(position);
@@ -62,8 +62,8 @@ public class CrimePagerActivity extends AppCompatActivity {
             }
         });
         int crimeSize = mCrimes.size();
-        for (int i = 0; i < crimeSize; i++){
-            if (mCrimes.get(i).getId().equals(crimeId)){
+        for (int i = 0; i < crimeSize; i++) {
+            if (mCrimes.get(i).getId().equals(crimeId)) {
                 mViewPager.setCurrentItem(i);
                 break;
             }
@@ -72,7 +72,7 @@ public class CrimePagerActivity extends AppCompatActivity {
         mLastButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewPager.setCurrentItem(mCrimes.size()-1);
+                mViewPager.setCurrentItem(mCrimes.size() - 1);
                 mLastButton.setVisibility(View.GONE);
             }
         });
