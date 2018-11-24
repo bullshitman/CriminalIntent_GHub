@@ -1,4 +1,10 @@
 package com.example.apara.criminalintent;
 
-public class DatePickingActivity {
+import android.support.v4.app.Fragment;
+
+public class DatePickingActivity extends SingleFragmentActivity {
+    @Override
+    protected Fragment createFragment() {
+        return null;
+    }
 }
