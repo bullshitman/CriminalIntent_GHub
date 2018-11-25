@@ -28,10 +28,8 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 0;
     private Crime mCrime;
-    private EditText mTitleField;
     private Button mDateButton;
     private Button mTimeButton;
-    private CheckBox mSolvedCheckBox;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -73,9 +71,9 @@ public class CrimeFragment extends Fragment {
         mDateButton.setText(s);
     }
 
-    public void returnResult() {
-        getActivity().setResult(Activity.RESULT_OK, null);
-    }
+//    public void returnResult() {
+//        getActivity().setResult(Activity.RESULT_OK, null);
+//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,9 +87,9 @@ public class CrimeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
-        mTitleField = v.findViewById(R.id.crime_title);
-        mTitleField.setText(mCrime.getTitle());
-        mTitleField.addTextChangedListener(new TextWatcher() {
+        EditText titleField = v.findViewById(R.id.crime_title);
+        titleField.setText(mCrime.getTitle());
+        titleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -131,15 +129,22 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mSolvedCheckBox = v.findViewById(R.id.crime_solved);
-        mSolvedCheckBox.setChecked(mCrime.isSolved());
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        CheckBox solvedCheckBox = v.findViewById(R.id.crime_solved);
+        solvedCheckBox.setChecked(mCrime.isSolved());
+        solvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
             }
         });
-
+        Button deleteButton = v.findViewById(R.id.delete_crime);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CrimeLab.get(getActivity()).removeCrime(mCrime);
+                getActivity().finish();
+            }
+        });
         return v;
     }
 }
