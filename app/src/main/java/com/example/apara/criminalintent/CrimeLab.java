@@ -1,17 +1,23 @@
 package com.example.apara.criminalintent;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
+import com.example.apara.criminalintent.database.CrimeBaseHelper;
+import com.example.apara.criminalintent.database.CrimeDbScheme;
+
 import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
-    private List<Crime> mCrimes;
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
     private CrimeLab(Context context) {
-        mCrimes = new ArrayList<>();
+        mContext = context.getApplicationContext();
+        mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
     }
 
     public static CrimeLab get(Context context) {
@@ -21,27 +27,38 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
-    public List<Crime> getCrimes() {
-        return mCrimes;
+    private static ContentValues getContentValues(Crime crime) {
+        ContentValues values = new ContentValues();
+        values.put(CrimeDbScheme.CrimeTable.Cols.UUID, crime.getId().toString());
+        values.put(CrimeDbScheme.CrimeTable.Cols.TITLE, crime.getId().toString());
+        values.put(CrimeDbScheme.CrimeTable.Cols.DATE, crime.getId().toString());
+        values.put(CrimeDbScheme.CrimeTable.Cols.SOLVED, crime.getId().toString());
+        return values;
     }
 
-    public Crime getCrime(UUID id) {
-        int size = mCrimes.size();
-        Crime crime;
-        for (int i = 0; i < size; i++) {
-            crime = mCrimes.get(i);
-            if (crime.getId().equals(id)) {
-                return crime;
-            }
-        }
+    public List<Crime> getCrimes() {
         return null;
     }
 
+    public Crime getCrime(UUID id) {
+
+        return null;
+    }
+
+    public void updateCrime(Crime crime) {
+        String uuidString = crime.getId().toString();
+        ContentValues values = getContentValues(crime);
+        mDatabase.update(CrimeDbScheme.CrimeTable.NAME, values,
+                CrimeDbScheme.CrimeTable.Cols.UUID + " = ?",
+                new String[]{uuidString});
+    }
+
     public void addCrime(Crime c) {
-        mCrimes.add(c);
+        ContentValues values = getContentValues(c);
+        mDatabase.insert(CrimeDbScheme.CrimeTable.NAME, null, values);
     }
 
     public void removeCrime(Crime c) {
-        mCrimes.remove(c);
+
     }
 }
