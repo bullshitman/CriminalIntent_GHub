@@ -34,11 +34,12 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 1;
     private static final int REQUEST_CONTACT = 2;
+    private static final int REQUEST_CALL = 3;
     private Crime mCrime;
     private Button mDateButton;
     private Button mTimeButton;
-    private Button mSendCrimeReport;
     private Button mSuspect;
+    private Button mCallSuspect;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -73,6 +74,12 @@ public class CrimeFragment extends Fragment {
             String[] queryFields = new String[]{
                     ContactsContract.Contacts.DISPLAY_NAME
             };
+            String[] queryFieldsId = new String[]{
+                    ContactsContract.CommonDataKinds.Phone._ID
+            };
+            String[] queryFieldsPhone = new String[]{
+                    ContactsContract.CommonDataKinds.Phone.NUMBER
+            };
             Cursor c = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
             try {
                 if (c.getCount() == 0) {
@@ -82,6 +89,36 @@ public class CrimeFragment extends Fragment {
                 String suspect = c.getString(0);
                 mCrime.setSuspect(suspect);
                 mSuspect.setText(suspect);
+            } finally {
+                c.close();
+            }
+
+            c = getActivity().getContentResolver().query(contactUri, queryFieldsId, null, null, null);
+            try {
+                if (c.getCount() == 0) {
+                    return;
+                }
+                c.moveToFirst();
+                String idPhone = c.getString(0);
+
+                Cursor ph = getActivity().getContentResolver().query
+                        (ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+                                , queryFieldsPhone
+                                , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " =?"
+                                , new String[]{idPhone}
+                                , null);
+                try {
+                    if (ph.getCount() == 0) {
+                        return;
+                    }
+                    ph.moveToFirst();
+                    String phone = ph.getString(ph.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    mCrime.setPhone(phone);
+                    mCallSuspect.setText(phone);
+                } finally {
+                    ph.close();
+                }
+
             } finally {
                 c.close();
             }
@@ -177,8 +214,8 @@ public class CrimeFragment extends Fragment {
                 getActivity().finish();
             }
         });
-        mSendCrimeReport = v.findViewById(R.id.crime_report);
-        mSendCrimeReport.setOnClickListener(new View.OnClickListener() {
+        Button sendCrimeReport = v.findViewById(R.id.crime_report);
+        sendCrimeReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Intent intent = new Intent(Intent.ACTION_SEND);
@@ -210,6 +247,10 @@ public class CrimeFragment extends Fragment {
         PackageManager packageManager = getActivity().getPackageManager();
         if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspect.setEnabled(false);
+        }
+        mCallSuspect = v.findViewById(R.id.call_suspect);
+        if (mCrime.getPhone() != null) {
+            mCallSuspect.setText(mCrime.getPhone());
         }
 
         return v;

@@ -17,7 +17,6 @@
         android:id="@+id/crime_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoText="false"
         android:inputType="text"
         android:text="@string/crime_hint" />
 
@@ -54,6 +53,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_report_text" />
+
+    <Button
+        android:id="@+id/call_suspect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/call_suspect" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
