@@ -57,6 +57,7 @@ public class CrimeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String phoneId;
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
@@ -78,8 +79,10 @@ public class CrimeFragment extends Fragment {
                     ContactsContract.CommonDataKinds.Phone._ID
             };
             String[] queryFieldsPhone = new String[]{
-                    ContactsContract.CommonDataKinds.Phone.NUMBER
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Phone.IS_PRIMARY
             };
+
             Cursor c = getActivity().getContentResolver().query(contactUri, queryFields, null, null, null);
             try {
                 if (c.getCount() == 0) {
@@ -99,13 +102,13 @@ public class CrimeFragment extends Fragment {
                     return;
                 }
                 c.moveToFirst();
-                String idPhone = c.getString(0);
+                phoneId = c.getString(0);
 
                 Cursor ph = getActivity().getContentResolver().query
                         (ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-                                , queryFieldsPhone
-                                , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " =?"
-                                , new String[]{idPhone}
+                                , null
+                                , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + phoneId
+                                , null
                                 , null);
                 try {
                     if (ph.getCount() == 0) {
@@ -249,6 +252,15 @@ public class CrimeFragment extends Fragment {
             mSuspect.setEnabled(false);
         }
         mCallSuspect = v.findViewById(R.id.call_suspect);
+        mCallSuspect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + mCrime.getPhone()));
+                startActivity(intent);
+            }
+        });
         if (mCrime.getPhone() != null) {
             mCallSuspect.setText(mCrime.getPhone());
         }
@@ -257,7 +269,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private String getCrimeReport() {
-        String solvedString = null;
+        String solvedString;
         if (mCrime.isSolved()) {
             solvedString = getString(R.string.crime_report_solved);
         } else {
