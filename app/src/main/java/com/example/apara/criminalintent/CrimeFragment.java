@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +42,8 @@ public class CrimeFragment extends Fragment {
     private Button mTimeButton;
     private Button mSuspect;
     private Button mCallSuspect;
+    private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -180,6 +184,8 @@ public class CrimeFragment extends Fragment {
 
         mDateButton = v.findViewById(R.id.crime_date);
         mTimeButton = v.findViewById(R.id.crime_time);
+        mPhotoView = v.findViewById(R.id.crime_photo);
+        mPhotoButton = v.findViewById(R.id.crime_camera);
         updateDate();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
