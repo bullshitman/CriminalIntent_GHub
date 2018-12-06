@@ -9,6 +9,7 @@ import com.example.apara.criminalintent.database.CrimeBaseHelper;
 import com.example.apara.criminalintent.database.CrimeCursorWrapper;
 import com.example.apara.criminalintent.database.CrimeDbScheme.CrimeTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -100,5 +101,13 @@ class CrimeLab {
                 null
         );
         return new CrimeCursorWrapper(cursor);
+    }
+
+    public File getPhotoFile(Crime crime) {
+        File filesDir = mContext.getFilesDir();
+        return new File(filesDir, crime.getPhotoFileName());
+//        if (externalFilesDir == null){
+//
+//        }
     }
 }
