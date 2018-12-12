@@ -28,6 +28,9 @@
         <activity
             android:name=".CrimePagerActivity"
             android:parentActivityName=".CrimeListActivity" />
+        <activity
+            android:name=".DialogFragment"
+            android:parentActivityName=".CrimeListActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
