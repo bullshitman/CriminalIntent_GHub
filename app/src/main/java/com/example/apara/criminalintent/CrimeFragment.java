@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -22,6 +23,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -176,6 +178,17 @@ public class CrimeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
+        mDateButton = v.findViewById(R.id.crime_date);
+        mTimeButton = v.findViewById(R.id.crime_time);
+        mPhotoView = v.findViewById(R.id.crime_photo);
+        mPhotoButton = v.findViewById(R.id.crime_camera);
+        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                updatePhotoView();
+            }
+        });
         EditText titleField = v.findViewById(R.id.crime_title);
         titleField.setText(mCrime.getTitle());
         titleField.addTextChangedListener(new TextWatcher() {
@@ -195,10 +208,7 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton = v.findViewById(R.id.crime_date);
-        mTimeButton = v.findViewById(R.id.crime_time);
-        mPhotoView = v.findViewById(R.id.crime_photo);
-        mPhotoButton = v.findViewById(R.id.crime_camera);
+
         updateDate();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,8 +302,8 @@ public class CrimeFragment extends Fragment {
                 Uri uri = FileProvider.getUriForFile(getActivity(), "com.example.apara.criminalintent.fileprovider", mPhotoFile);
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 List<ResolveInfo> cameraActivities = getActivity().getPackageManager().queryIntentActivities(captureImage, PackageManager.MATCH_DEFAULT_ONLY);
-                for (ResolveInfo activitiy : cameraActivities) {
-                    getActivity().grantUriPermission(activitiy.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                for (ResolveInfo activity : cameraActivities) {
+                    getActivity().grantUriPermission(activity.activityInfo.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
                 startActivityForResult(captureImage, REQUEST_PHOTO);
             }
@@ -336,7 +346,10 @@ public class CrimeFragment extends Fragment {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
         } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.outWidth = mPhotoView.getWidth();
+            options.outHeight = mPhotoView.getHeight();
+            Bitmap bitmap = BitmapFactory.decodeFile(mPhotoFile.getPath(), options);
             mPhotoView.setImageBitmap(bitmap);
         }
     }
