@@ -1,5 +1,6 @@
 package com.example.apara.criminalintent;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,23 @@ public class CrimeListFragment extends Fragment {
     private CrimeAdapter mAdapter;
     private int mCurrentProc;
     private boolean mSubtitleVisible;
+    private Callbacks mCallbacks;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
