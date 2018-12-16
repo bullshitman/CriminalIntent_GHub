@@ -1,6 +1,7 @@
 package com.example.apara.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -55,6 +56,7 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private File mPhotoFile;
+    private Callbacks mCallbacks;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -62,6 +64,22 @@ public class CrimeFragment extends Fragment {
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -83,6 +101,7 @@ public class CrimeFragment extends Fragment {
         } else if (requestCode == REQUEST_TIME) {
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 mCrime.setDate(date);
+            updateCrime();
                 updateDate();
 
         } else if (requestCode == REQUEST_CONTACT && data != null) {
@@ -106,6 +125,7 @@ public class CrimeFragment extends Fragment {
                 c.moveToFirst();
                 String suspect = c.getString(0);
                 mCrime.setSuspect(suspect);
+                updateCrime();
                 mSuspect.setText(suspect);
             } finally {
                 c.close();
@@ -144,34 +164,9 @@ public class CrimeFragment extends Fragment {
         } else if (requestCode == REQUEST_PHOTO) {
             Uri uri = FileProvider.getUriForFile(getActivity(), "com.example.apara.criminalintent.fileprovider", mPhotoFile);
             getActivity().revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            updateCrime();
             updatePhotoView();
         }
-    }
-
-    private void updateDate() {
-        Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTime(mCrime.getDate());
-        int year = mCalendar.get(Calendar.YEAR);
-        int month = mCalendar.get(Calendar.MONTH);
-        int day = mCalendar.get(Calendar.DAY_OF_MONTH);
-        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
-        int minutes = mCalendar.get(Calendar.MINUTE);
-        String s = hour + ":" + minutes;
-        mTimeButton.setText(s);
-        s = year + "." + month + "." + day;
-        mDateButton.setText(s);
-    }
-
-//    public void returnResult() {
-//        getActivity().setResult(Activity.RESULT_OK, null);
-//    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
-        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
     }
 
     @Nullable
@@ -200,6 +195,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                updateCrime();
             }
 
             @Override
@@ -236,6 +232,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
         Button deleteButton = v.findViewById(R.id.delete_crime);
@@ -321,6 +318,36 @@ public class CrimeFragment extends Fragment {
 
 
         return v;
+    }
+
+    private void updateDate() {
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.setTime(mCrime.getDate());
+        int year = mCalendar.get(Calendar.YEAR);
+        int month = mCalendar.get(Calendar.MONTH);
+        int day = mCalendar.get(Calendar.DAY_OF_MONTH);
+        int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
+        int minutes = mCalendar.get(Calendar.MINUTE);
+        String s = hour + ":" + minutes;
+        mTimeButton.setText(s);
+        s = year + "." + month + "." + day;
+        mDateButton.setText(s);
+    }
+
+//    public void returnResult() {
+//        getActivity().setResult(Activity.RESULT_OK, null);
+//    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
+        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+    }
+
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
     }
 
     private String getCrimeReport() {
