@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,8 +45,42 @@ public class CrimeListFragment extends Fragment {
         mCallbacks = null;
     }
 
-    public interface Callbacks {
-        void onCrimeSelected(Crime crime);
+    void updateUI() {
+        CrimeLab crimeLab = CrimeLab.get(getActivity());
+        List<Crime> crimes = crimeLab.getCrimes();
+        if (crimes.size() == 0) {
+            mCrimeRecyclerView.setVisibility(View.GONE);
+            mNoCrimesWarning.setVisibility(View.VISIBLE);
+        } else {
+            mCrimeRecyclerView.setVisibility(View.VISIBLE);
+            mNoCrimesWarning.setVisibility(View.GONE);
+        }
+
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                    Crime crime = mAdapter.mCrimes.get(viewHolder.getAdapterPosition());
+                    CrimeLab.get(getActivity()).removeCrime(crime);
+                    mCallbacks.onCrimeRemoved();
+
+                }
+            });
+            itemTouchHelper.attachToRecyclerView(mCrimeRecyclerView);
+//        } else if (mCurrentProc < 0) {
+//            mAdapter.notifyItemRemoved(mCurrentProc);
+        } else {
+            mAdapter.setCrimes(crimes);
+            mAdapter.notifyItemRangeChanged(mCurrentProc, CrimeLab.get(getActivity()).getCrimes().size());
+        }
+        updateSubtitle();
     }
 
     @Override
@@ -108,27 +143,10 @@ public class CrimeListFragment extends Fragment {
         updateUI();
     }
 
-    void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
-        if (crimes.size() == 0) {
-            mCrimeRecyclerView.setVisibility(View.GONE);
-            mNoCrimesWarning.setVisibility(View.VISIBLE);
-        } else {
-            mCrimeRecyclerView.setVisibility(View.VISIBLE);
-            mNoCrimesWarning.setVisibility(View.GONE);
-        }
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
 
-        if (mAdapter == null) {
-            mAdapter = new CrimeAdapter(crimes);
-            mCrimeRecyclerView.setAdapter(mAdapter);
-//        } else if (mCurrentProc < 0) {
-//            mAdapter.notifyItemRemoved(mCurrentProc);
-        } else {
-            mAdapter.setCrimes(crimes);
-            mAdapter.notifyItemRangeChanged(mCurrentProc, CrimeLab.get(getActivity()).getCrimes().size());
-        }
-        updateSubtitle();
+        void onCrimeRemoved();
     }
 
     @Override
