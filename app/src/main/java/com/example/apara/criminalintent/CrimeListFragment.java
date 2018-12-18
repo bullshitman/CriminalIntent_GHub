@@ -29,7 +29,6 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private TextView mNoCrimesWarning;
     private CrimeAdapter mAdapter;
-    private int mCurrentProc;
     private boolean mSubtitleVisible;
     private Callbacks mCallbacks;
 
@@ -205,7 +204,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            mCurrentProc = getAdapterPosition();
+            int currentProc = getAdapterPosition();
 //            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
 //            startActivityForResult(intent, REQUEST_CRIME);
             mCallbacks.onCrimeSelected(mCrime);

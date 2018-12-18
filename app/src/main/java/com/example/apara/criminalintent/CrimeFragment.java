@@ -53,7 +53,6 @@ public class CrimeFragment extends Fragment {
     private Button mTimeButton;
     private Button mSuspect;
     private Button mCallSuspect;
-    private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private File mPhotoFile;
     private Callbacks mCallbacks;
@@ -176,7 +175,7 @@ public class CrimeFragment extends Fragment {
         mDateButton = v.findViewById(R.id.crime_date);
         mTimeButton = v.findViewById(R.id.crime_time);
         mPhotoView = v.findViewById(R.id.crime_photo);
-        mPhotoButton = v.findViewById(R.id.crime_camera);
+        ImageButton photoButton = v.findViewById(R.id.crime_camera);
         ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -291,9 +290,9 @@ public class CrimeFragment extends Fragment {
             mCallSuspect.setText(mCrime.getPhone());
         }
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        boolean canTakePhoto = mPhotoButton != null && captureImage.resolveActivity(packageManager) != null;
-        mPhotoButton.setEnabled(canTakePhoto);
-        mPhotoButton.setOnClickListener(new View.OnClickListener() {
+        boolean canTakePhoto = photoButton != null && captureImage.resolveActivity(packageManager) != null;
+        photoButton.setEnabled(canTakePhoto);
+        photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Uri uri = FileProvider.getUriForFile(getActivity(), "com.example.apara.criminalintent.fileprovider", mPhotoFile);
