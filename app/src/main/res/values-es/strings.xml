@@ -32,4 +32,7 @@
     <string name="formatted_date">EEE, MMM d, yyyy</string>
     <string name="time_picker_title">Tiempo de crimen</string>
     <string name="zero_crimes">No hay delitos.</string>
+    <string name="date_crime">Selección de la fecha del delito.</string>
+    <string name="new_crime_phote_was_set">Se fijó la nueva foto del crimen.</string>
+    <string name="time_crime">Selección del tiempo para el crimen.</string>
 </resources>

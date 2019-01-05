@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -185,6 +186,7 @@ public class CrimeListFragment extends Fragment {
         private Crime mCrime;
         private Button mPoliceButton;
         private ImageView mSolvedImageView;
+        private ConstraintLayout mConstraintLayout;
 
         CrimeHolder(LayoutInflater inflater, ViewGroup parent, int layout) {
             super(inflater.inflate(layout, parent, false));
@@ -192,6 +194,8 @@ public class CrimeListFragment extends Fragment {
             mTitleView = itemView.findViewById(R.id.crime_title);
             mDateTextView = itemView.findViewById(R.id.crime_date);
             mSolvedImageView = itemView.findViewById(R.id.crime_solved);
+            mConstraintLayout = itemView.findViewById(R.id.constraintLayout);
+
         }
 
         void bind(Crime crime) {
@@ -200,6 +204,7 @@ public class CrimeListFragment extends Fragment {
             SimpleDateFormat simpleCrimeDate = new SimpleDateFormat("EEEE, MMM d, yyyy");
             mDateTextView.setText(simpleCrimeDate.format(mCrime.getDate()));
             mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
+            mConstraintLayout.setContentDescription("Title: " + mCrime.getTitle() + " Date: " + mDateTextView.getText() + (crime.isSolved() ? getString(R.string.crime_report_solved) : getString(R.string.crime_report_unsolved)));
         }
 
         @Override
