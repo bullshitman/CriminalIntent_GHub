@@ -74,6 +74,7 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        CrimeLab.get(getContext()).updateCrime(mCrime);
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
     }
 
     @Override
@@ -177,13 +178,13 @@ public class CrimeFragment extends Fragment {
         mTimeButton = v.findViewById(R.id.crime_time);
         mPhotoView = v.findViewById(R.id.crime_photo);
         ImageButton photoButton = v.findViewById(R.id.crime_camera);
-        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                updatePhotoView();
-            }
-        });
+//        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
+//        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                updatePhotoView();
+//            }
+//        });
         EditText titleField = v.findViewById(R.id.crime_title);
         titleField.setText(mCrime.getTitle());
         titleField.addTextChangedListener(new TextWatcher() {
@@ -305,7 +306,7 @@ public class CrimeFragment extends Fragment {
                 startActivityForResult(captureImage, REQUEST_PHOTO);
             }
         });
-        updatePhotoView();
+//        updatePhotoView();
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,7 +316,16 @@ public class CrimeFragment extends Fragment {
                 dialog.show(manager, DIALOG_PHOTO);
             }
         });
-
+        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
+        if (observer.isAlive()) {
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    updatePhotoView();
+                }
+            });
+        }
 
         return v;
     }
@@ -374,12 +384,14 @@ public class CrimeFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription(getActivity().getResources().getString(R.string.crime_photo_no_image_description));
         } else {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.outWidth = mPhotoView.getWidth();
             options.outHeight = mPhotoView.getHeight();
             Bitmap bitmap = BitmapFactory.decodeFile(mPhotoFile.getPath(), options);
             mPhotoView.setImageBitmap(bitmap);
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_image_description));
         }
     }
 }

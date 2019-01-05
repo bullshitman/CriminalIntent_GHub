@@ -24,13 +24,16 @@
                 android:background="@android:color/darker_gray"
                 android:cropToPadding="true"
                 android:scaleType="centerInside"
+                android:contentDescription="@string/crime_photo_no_image_description"
+                android:focusable="true"
                 app:srcCompat="@android:drawable/btn_dialog" />
 
             <ImageButton
                 android:id="@+id/crime_camera"
                 android:src="@android:drawable/ic_menu_camera"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/crime_photo_button_description" />
         </LinearLayout>
 
         <LinearLayout
@@ -43,6 +46,7 @@
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/crime_title"
                 android:text="@string/crime_title_label" />
 
             <EditText
