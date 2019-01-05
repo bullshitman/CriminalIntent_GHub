@@ -19,4 +19,17 @@
     <string name="crime_report_suspect">el/la sospechoso/a es %s.</string>
     <string name="crime_report_subject">IntentoCriminal Informe del Crimen</string>
     <string name="send_report">Enviar el informe del crimen a través de</string>
+    <string name="crime_hint">Introduzca un título para el crimen.</string>
+    <string name="Begin">Empezar</string>
+    <string name="call_suspect">Llamar para sospechar</string>
+    <string name="call_the_police">Policía</string>
+    <string name="crime_photo_button_description">"Tomar foto de la escena del crimen "</string>
+    <string name="crime_photo_image_description">"Escena del crimen foto (set) "</string>
+    <string name="crime_photo_no_image_description">Foto de la escena del crimen (no establecida)</string>
+    <string name="crime_title_hint">Introduzca un título significativo y memorable para el crimen.</string>
+    <string name="delete_crime">Borrar</string>
+    <string name="end">Fin</string>
+    <string name="formatted_date">EEE, MMM d, yyyy</string>
+    <string name="time_picker_title">Tiempo de crimen</string>
+    <string name="zero_crimes">No hay delitos.</string>
 </resources>
